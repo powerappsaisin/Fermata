@@ -1,0 +1,29 @@
+name: Build Google Play Bundle (.aab)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for Gradle
+        run: chmod +x gradlew
+
+      - name: Build Android App Bundle (.aab)
+        run: ./gradlew :fermata:bundleAutoReleaseUniversal
+
+      - name: Upload AAB Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fermata-play-console-bundle
+          path: '**/*.aab'
