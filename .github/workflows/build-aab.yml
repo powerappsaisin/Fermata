@@ -16,14 +16,14 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: '17'
 
       - name: Grant Execute Permission to Gradle
         run: chmod +x gradlew
 
-      - name: Fix Automotive Manifest Conflict
-        run: find . -name "AndroidManifest.xml" -exec sed -i '/android.hardware.type.automotive/d' {} +
+      - name: Safely Swap Automotive Tag
+        run: find . -name "AndroidManifest.xml" -exec sed -i 's/android.hardware.type.automotive/android.hardware.type.dummy/g' {} +
 
       - name: Build Android App Bundle with Custom Suffix
         run: ./gradlew bundleAutoRelease -PAPP_ID_SFX=.ttmd
