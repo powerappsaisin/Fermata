@@ -25,8 +25,10 @@ jobs:
       - name: Safely Swap Automotive Tag for Touchscreen
         run: find . -name "AndroidManifest.xml" -exec sed -i 's/android.hardware.type.automotive/android.hardware.touchscreen/g' {} +
 
-      - name: Bump Version Code to 268
-        run: find . -type f \( -name "build.gradle" -o -name "gradle.properties" -o -name "AndroidManifest.xml" \) -exec sed -i 's/267/268/g' {} +
+      - name: Aggressively Bump Version Code
+        run: |
+          find . -type f \( -name "*.gradle" -o -name "*.kts" -o -name "*.properties" -o -name "*.xml" \) -print0 | xargs -0 sed -i -E 's/versionCode[[:space:]]*=?[[:space:]]*[0-9]+/versionCode 268/g'
+          find . -type f \( -name "*.gradle" -o -name "*.kts" -o -name "*.properties" \) -print0 | xargs -0 sed -i 's/267/268/g'
 
       - name: Build Android App Bundle with Custom Suffix
         run: ./gradlew bundleAutoRelease -PAPP_ID_SFX=.ttmd
